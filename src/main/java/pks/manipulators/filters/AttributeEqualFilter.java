@@ -3,6 +3,9 @@ package pks.manipulators.filters;
 import lombok.AllArgsConstructor;
 import pks.model.Patient;
 
+/*
+ * Filtering last value of specified attribute to be equal to specified value.
+ */
 @AllArgsConstructor
 public class AttributeEqualFilter {
     private final String attributeName;

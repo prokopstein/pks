@@ -11,6 +11,10 @@ repositories {
     mavenCentral()
 }
 
+test {
+    testLogging.showStandardStreams = true
+}
+
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.10'
 

@@ -24,6 +24,7 @@ public class PksAnalyzer {
 
         final PatientRepository patientRepository = buildRepository(args[0]);
 
+        // run all queries in parallel
         final Queries queries = new Queries();
         CompletableFuture.allOf(
                 CompletableFuture.runAsync(() -> queries.maleCount(patientRepository)),
@@ -35,7 +36,7 @@ public class PksAnalyzer {
         ).join();
     }
 
-    private static PatientRepository buildRepository(final String filePath) {
+    public static PatientRepository buildRepository(final String filePath) {
         final DataReader reader = new CsvDataReader(filePath);
 
         try (final Stream<PatientRecord> records = reader.read()) {
@@ -45,6 +46,7 @@ public class PksAnalyzer {
 
             return builder.build();
         } catch (final ReadDataException ex) {
+            logger.severe(ex.toString());
             throw ex;
         }
     }

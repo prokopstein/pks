@@ -34,7 +34,7 @@ public class PatientRepositoryImpl implements PatientRepository {
                         return newPatient;
                     });
 
-            patient.addAttributeRecord(record.getAttributeName(), record.getDate(), record.getAttributeValue());
+            patient.addRecord(record);
             return this;
         }
 

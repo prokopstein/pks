@@ -11,10 +11,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class QueriesTest {
+    private static final String filePath = "src/test/resources/messages.csv";
 
-    private static String filePath = "src/test/resources/messages.csv";
-
-    private PatientRepository patientRepository = PksAnalyzer.buildRepository(filePath);
+    private final PatientRepository patientRepository = PksAnalyzer.buildRepository(filePath);
 
     @Test
     public void maleCountTest() {

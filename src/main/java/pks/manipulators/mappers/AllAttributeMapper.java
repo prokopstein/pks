@@ -5,6 +5,9 @@ import pks.model.Patient;
 
 import java.util.stream.Stream;
 
+/*
+ * Mapping to the stream of specified attribute values.
+ */
 @AllArgsConstructor
 public class AllAttributeMapper {
     private final String attributeName;

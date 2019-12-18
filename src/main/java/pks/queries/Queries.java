@@ -7,8 +7,7 @@ import pks.manipulators.mappers.AttributeMapper;
 import pks.manipulators.reducers.AverageReducer;
 import pks.repository.PatientRepository;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Queries {
@@ -20,35 +19,38 @@ public class Queries {
     private final AllAttributeMapper bloodMapper = new AllAttributeMapper("Blood pressure");
     private final AllAttributeMapper glucoseMapper = new AllAttributeMapper("Glucose");
 
-    public void maleCount(final PatientRepository patientRepository) {
+    public long maleCount(final PatientRepository patientRepository) {
         long s = patientRepository
                 .patients()
                 .filter(maleFilter::filter)
                 .count();
 
-        System.out.println("Male count: " + s);
+        System.out.println(String.format("Male count: %d", s));
+        return s;
     }
 
-    public void femaleCount(final PatientRepository patientRepository) {
+    public long femaleCount(final PatientRepository patientRepository) {
         long s = patientRepository
                 .patients()
                 .filter(femaleFilter::filter)
                 .count();
 
-        System.out.println("Female count: " + s);
+        System.out.println(String.format("Female count: %d", s));
+        return s;
     }
 
-    public void maleAge(final PatientRepository patientRepository) {
+    public double maleAge(final PatientRepository patientRepository) {
         double s = AverageReducer.reduce(patientRepository
                 .patients()
                 .filter(maleFilter::filter)
                 .map(ageMapper::map)
                 .filter(Objects::nonNull));
 
-        System.out.println("Average male age: " + s);
+        System.out.println(String.format("Average male age: %.2f", s));
+        return s;
     }
 
-    public void femaleAge(final PatientRepository patientRepository) {
+    public double femaleAge(final PatientRepository patientRepository) {
         double s = AverageReducer.reduce(patientRepository
                 .patients()
                 .filter(femaleFilter::filter)
@@ -56,12 +58,13 @@ public class Queries {
                 .filter(Objects::nonNull));
 
         System.out.println(String.format("Average female age: %.2f", s));
+        return s;
     }
 
-    public void increasingGlucoseLevel(final PatientRepository patientRepository) {
-        patientRepository
+    public List<Integer> increasingGlucoseLevel(final PatientRepository patientRepository) {
+        return patientRepository
                 .patients()
-                .forEach(patient -> {
+                .map(patient -> {
                     final List<Double> levels = glucoseMapper
                             .map(patient)
                             .map(Double::parseDouble)
@@ -75,19 +78,28 @@ public class Queries {
 
                     if (s > 0.5) {
                         System.out.println(String.format("Patient #%d has increased glucose level", patient.getPatientId()));
+                        return patient.getPatientId();
                     }
-                });
+                    return null;
+                })
+                .filter(Objects::nonNull)
+                .collect(Collectors.toList());
     }
 
-    public void bloodPressureReport(final PatientRepository patientRepository) {
+    public Map<Integer, Double> bloodPressureReport(final PatientRepository patientRepository) {
         final AttributeRangeFilter ageRangeFilter = new AttributeRangeFilter("Age", "23", "26");
 
+        final Map<Integer, Double> patients = new HashMap<>();
         patientRepository
                 .patients()
                 .filter(ageRangeFilter::filter)
                 .forEach(patient -> {
                     double s = AverageReducer.reduce(bloodMapper.map(patient));
                     System.out.println(String.format("Patient #%d average blood pressure: %.2f", patient.getPatientId(), s));
+
+                    patients.put(patient.getPatientId(), s);
                 });
+
+        return patients;
     }
 }

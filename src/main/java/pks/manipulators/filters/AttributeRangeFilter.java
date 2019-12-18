@@ -3,6 +3,9 @@ package pks.manipulators.filters;
 import lombok.AllArgsConstructor;
 import pks.model.Patient;
 
+/*
+ * Filtering last value of specified attribute to be within specified range.
+ */
 @AllArgsConstructor
 public class AttributeRangeFilter {
     private final String attributeName;
