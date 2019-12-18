@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group 'pks'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.10'
+
+    annotationProcessor 'org.projectlombok:lombok:1.18.10'
+
+    testCompile 'junit:junit:4.12'
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'pks.PksAnalyzer'
+        )
+    }
+}
